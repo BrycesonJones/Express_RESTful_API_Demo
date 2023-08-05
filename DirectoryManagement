@@ -1,0 +1,87 @@
+const Joi = require('joi');
+const express = required ('express');
+const app = express();
+
+app.use(express.json());
+const directories = [
+    {id: 1, name: 'directory1' },
+    {id: 2, name: 'directory2' },
+    {id: 3, name: 'directory3' },
+];
+
+
+// Retrieving a Resource
+app.get('/', (req, res) => {
+    res.send('Hello, Welcome');
+});
+
+app.get('/api/directories', (req,res) => {
+    res.send(directories);
+});
+
+app.get('/api/directory/:id', (req, res) =>{
+    const directory = res.find(c => c.id === parseInt(req.params.id));
+    if (!directory) res.status(404).send('The directory with the given ID was not found');
+    res.send(directory);
+});
+
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log('Listening on port ${port}...'))
+
+
+// Creating a New Resource
+app.post.('/api/directories', (req, res) => {
+    const { error } = validateDirectory(req.body);
+    if (error) return res.status(400).send(result.error.details[0].message);
+
+    const directory = {
+        id: directory.length + 1
+        name: req.body.name
+    };
+    directories.push(directory);
+    res.send(directory);
+});
+
+
+// Updating a Resource
+app.put('/api/directores/:id' (req, res) => {
+    // Look up the Directory
+    const directory = res.find(c => c.id === parseInt(req.params.id));
+    if (!directory) return res.status(404).send('The directory with the given ID was not found');
+    // Validate Directory
+    const { error } = validateDirectory(req.body);
+    if (error) return res.status(400).send(result.error.details[0].message);
+    // Update Directory
+    directory.name =req.body.name;
+    res.send(directory);
+});
+
+function validateDirectory(directory) {
+    const schema = {
+        name: Joi.string().min(3).required()
+    };
+
+  
+  return Joi.validate(directory, schema);
+}
+
+
+// Deleting a Resource
+app.delete('/api/directory/:id', (req, res) => {
+    // Look up dicrectory
+    // If does not exist return 404 message
+    const directory = directories.find(c => c.id === parseInt(req.params.id));
+    if (!directory) return res.status(404).send('The directory with the given ID was not found');
+
+    // Delete director. Need to find the index of the directory inside the array
+    const index = directory.index0f(directory);
+    directory.splice(index, 1);
+
+    res.send(directory);
+});
+app.get('/api/directory/id:' (req, res) => {
+    const directory = directory.find(c => c.id === parseInt(req.params.id));
+    if (!directory) return res.status(404).send('The directory with the given ID was not found');
+    res.send(directory);
+});
